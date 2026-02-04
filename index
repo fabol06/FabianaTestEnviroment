@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <iframe 
+      src="https://copilotstudio.preview.microsoft.com/environments/ca5225c7-5933-e6d1-8103-4d9e8028ba17/bots/copilots_header_00040/webchat?__version__=2" 
+      frameborder="0" 
+      style="width: 100%; height: 100%;"
+    ></iframe>
+  </body>
+</html>
+
