@@ -1175,28 +1175,41 @@ h3 {
   color: var(--gray);
 }
 
-    .pre-workshop-note {
-  margin: 1.5rem 0 2.5rem;
-  padding: 1rem 1.25rem;
-  background: #FFFFFF; 
-  border-left: 4px solid #0078D4;
-  border-radius: 0.5rem;
+.pre-workshop-note{
+  margin: 1.8rem 0 3rem;
+  padding: 1.6rem 1.8rem;
 
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: #323130;
+  background:#f3f6f9;
+  border:1px solid #d6e6f5;
+  border-left:4px solid #106ebe;
+  border-radius:14px;
+
+  max-width: 980px;
 }
 
-.pre-workshop-note strong {
-  display: block;
-  margin-bottom: 0.4rem;
-  font-weight: 600;
-  color: #2A446F;
+/* small blue label */
+.pre-note-label{
+  font-size:0.75rem;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#106ebe;
+
+  margin-bottom:14px;
 }
 
-.pre-workshop-note p {
-  margin: 0.25rem 0;
+/* body text */
+.pre-workshop-note p{
+  font-size:1.02rem;
+  line-height:1.65;
+  color:#323130;
+  margin:0 0 14px 0;
 }
+
+.pre-workshop-note p:last-child{
+  margin-bottom:0;
+}
+
 
     .level-grid-2 {
   grid-template-columns: repeat(2, 1fr);
@@ -1721,18 +1734,24 @@ h3 {
     </section>
     
     
-      <h2 class="why-title">Before The Workshop Begins</h2>
-    <div class="pre-workshop-note">
+   
+
+<div class="pre-workshop-note">
+
+  <div class="pre-note-label">Before the workshop begins</div>
+
   <p>
-    If you’ve arrived here early, you’re in the right place.
+    If you’ve arrived here early, you're in the right place.
   </p>
+
   <p>
-    Everything below is what we’ll work through together during the workshop.
-    You’re welcome to skim and get a sense of what’s coming —
-    we’ll guide you step by step once we begin.
+    Everything below is what we'll work through together during the workshop.
+    You're welcome to skim and get a sense of what's coming —
+    we'll guide you step by step once we begin.
   </p>
+
 </div>
-    
+
     
     <div class="agent-flow-divider"></div>
 
