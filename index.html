@@ -1,48 +1,3315 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>My Copilot Companion</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI for Nonprofit Leaders | Microsoft Elevate Days London</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Libreria Microsoft webchat -->
-<script src="https://cdn.jsdelivr.net/npm/@microsoft/agents-webchat@latest/dist/webchat.js"></script>
+  <style>
+     :root {
+      --primary: #0078D4;
+      --primary-dark: #2A446F;
+    
+      --light-gray: #d9d9d6;
+      --gray: #605E5C;
+      --gray-dark: #323130;
+    
+      --bg-light: #F4F3F5;
+      --bg-lighter: #f4f3f5;
+      --bg-white: #FFFFFF;
+       
+    
+      --warning-bg: #FFF1CC;
+      --warning-border: #FFB900;
+      --warning-text: #7F5A1A;
+    }
+
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F5F5F4;
+      color: var(--gray-dark);
+      line-height: 1.6;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 3.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 2.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .header .subtitle {
+      font-size: 1.125rem;
+      opacity: 0.9;
+    }
+
+    .header .meta {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      opacity: 0.8;
+    }
+
+    .copilot-bar {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 1rem 1.5rem;
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .copilot-bar p {
+      margin-bottom: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .copilot-link {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      text-decoration: none;
+      padding: 0.625rem 1.5rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      border: 2px solid rgba(255,255,255,0.3);
+      transition: all 0.2s;
+    }
+
+    .copilot-link:hover {
+      background: rgba(255,255,255,0.3);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 64rem;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 1.5rem;
+    }
+
+    .intro {
+      background: #FFFFFF;
+      border-radius: 1rem;
+      border: 1px solid #d9d9d6;;
+      padding: 2rem 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .intro h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .intro h3 {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .intro p {
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      line-height: 1.7;
+    }
+
+    .nav-section {
+      margin-bottom: 3rem;
+    }
+
+    .start-label {
+      text-align: left;
+      margin-bottom: 1rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      color: var(--gray);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .nav-btn {
+      background: var(--bg-light);
+      border: 2px solid transparent;
+      border-radius: 0.75rem;
+      padding: 1.25rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .nav-btn span {
+      display: block;
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .nav-btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,120,212,0.35);
+    }
+
+    @media (max-width: 768px) {
+      .nav-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .agent-section {
+      scroll-margin-top: 6.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .agent-card {
+      background: #ffffff;
+      border-radius: 1rem;
+      padding: 2rem 2.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border: 1px solid #e2e8f0;
+    }
+
+    .agent-eyebrow {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .agent-title {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 0.35rem;
+    }
+
+    .agent-subtitle {
+      font-size: 1rem;
+      color: var(--gray-dark);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    .challenge-box {
+      background: var(--warning-bg);
+      border-left: 4px solid var(--warning-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .challenge-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--warning-text);
+      margin-bottom: 0.35rem;
+    }
+
+    .challenge-text {
+      font-size: 0.95rem;
+      color: var(--gray-dark);
+      line-height: 1.7;
+    }
+
+    .entry-nav {
+      margin: 2.5rem 0 3rem;
+    }
+
+    .entry-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    .entry-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .entry-btn {
+      background: var(--bg-white);
+      border: 1px solid #e2e8f0;
+      border-radius: 0.75rem;
+      padding: 1.25rem 1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .entry-btn span {
+      display: block;
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .entry-btn:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 16px rgba(0,120,212,0.25);
+    }
+
+    @media (max-width: 768px) {
+      .entry-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .agent-subsection {
+      position: relative;
+    
+      background: #ffffff;
+      border-radius: 0.5rem;
+      padding: 2rem 2.5rem 2rem 3rem; 
+      margin-bottom: 2rem;
+      margin-top: 3rem;
+      border: 0.5px solid #d6e0ef;
+      box-shadow: 0 2px 3px rgba(15, 23, 42, 0.06);
+  }
+
+    .agent-subsection::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.5rem;
+      bottom: 1.5rem;
+      width: 5px;
+      border-radius: 4px;
+      background: var(--primary);
+    }
+
+
+    .agent-subsection h4 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.5rem;
+    }
+
+    .open-agent-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      background: var(--primary);
+      color: #ffffff;
+
+      padding: 0.85rem 1.1rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.25);
+
+      font-weight: 600;
+      font-size: 0.95rem;
+      line-height: 1;
+
+      box-shadow: 0 10px 24px rgba(0,120,212,0.22);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .open-agent-btn span {
+      color: #ffffff;
+    }
+    
+    .open-agent-btn:hover {
+      text-decoration: none; /* evita underline sull’hover */
+      transform: translateY(-2px);
+      filter: brightness(1.02);
+      box-shadow: 0 14px 30px rgba(0,120,212,0.28);
+    }
+
+    .open-agent-btn:active {
+      transform: translateY(0px);
+      box-shadow: 0 8px 18px rgba(0,120,212,0.22);
+    }
+
+    .open-agent-btn:focus-visible {
+      outline: 3px solid rgba(0,120,212,0.35);
+      outline-offset: 3px;
+    }
+    
+    .sub-intro {
+      font-size: 0.95rem;
+      color: var(--gray);
+    }
+
+
+    .intro-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 1.75rem 0;
+}
+
+.prerequisites-box {
+  background: #F5F5F4;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.prerequisites-box ul {
+  margin-top: 0.5rem;
+  padding-left: 1.25rem;
+  font-size: 0.95rem;
+}
+
+.prerequisites-box li {
+  margin-bottom: 0.4rem;
+}
+
+    
+    .help-choose {
+      margin-top: 0.75rem;
+      margin-bottom: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--gray);
+    }
+
+    .help-choose a,
+    .open-agent-link {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    
+    .open-agent-link.open-agent-btn {
+      color: #ffffff;
+    }
+
+    .help-choose a:hover,
+    .open-agent-link:hover {
+      text-decoration: underline;
+    }
+
+    .why-agents {
+      margin-bottom: 3.5rem;
+    }
+
+    .why-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem 2rem;
+    }
+
+    .why-card {
+      background: #ffffff;
+      border-radius: 0.75rem;
+      border: 1px solid var(--light-gray);
+      padding: 1.25rem 1.5rem;
+      min-height: 170px;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    .why-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 1.25rem;
+      bottom: 1.25rem;
+      width: 4px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .why-emoji {
+      display: block;
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .why-card h4 {
+      font-size: 1rem;
+      font-weight: 700;
+       margin-bottom: 0.5rem;
+    }
+
+    .why-card p {
+      font-size: 0.95rem;
+      margin-top: 0;
+      color: var(--gray);
+      line-height: 1.5;
+    }
+
+    .journey-start {
+      margin: 3rem 0 3.5rem;
+      padding: 1.75rem 2rem;
+      max-width: 64rem;
+      background: linear-gradient(
+        180deg,
+        rgba(0,120,212,0.08),
+        rgba(0,120,212,0.025)
+      );
+
+      border: 1.5px solid rgba(0,120,212,0.18);
+      border-radius: 1.25rem;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    }
+
+    .journey-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.35rem;
+    }
+
+    .journey-subtitle {
+      font-size: 0.95rem;
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .section-divider {
+      height: 2px;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(0,120,212,0.25),
+        transparent
+      );
+      margin: 3.5rem 0 3rem;
+    }
+
+    .cheatsheet {
+      margin-top: 4rem;
+    }
+
+    .cheatsheet-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .cheatsheet-subtitle {
+      font-size: 0.95rem;
+      color: var(--gray);
+      margin-bottom: 1.5rem;
+    }
+
+    .cheatsheet-table-wrapper {
+      overflow-x: auto;
+      background: #ffffff;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+    }
+
+    .cheatsheet-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .cheatsheet-table thead th {
+      background: var(--primary);
+      color: white;
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+    }
+
+    .cheatsheet-table tbody td {
+      padding: 0.85rem 1rem;
+      vertical-align: top;
+      border-top: 1px solid #e5e7eb;
+      color: var(--gray-dark);
+    }
+
+    .cheatsheet-table tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    .start-help {
+      margin-top: 3rem;
+      padding: 1.75rem 2rem;
+      background: var(--bg-light);
+      border: 1px solid rgba(0, 120, 212, 0.12);
+      border-radius: 0.75rem;
+    }
+
+    .start-help-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: var(--primary-dark);
+    }
+
+    .start-help-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .start-help-item {
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .start-help-item strong {
+      font-weight: 600;
+    }
+
+    .start-help-item span {
+      margin-left: 0.25rem;
+      color: var(--gray);
+    }
+
+    .start-help-item:hover {
+      background: rgba(0, 120, 212, 0.06);
+    }
+
+    #agent1-problem,
+    #agent1-persona,
+    #agent1-docs,
+    #agent1-help {
+      scroll-margin-top: 7.5rem;
+    }
+
+    .start-help-footer {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(0, 120, 212, 0.18);
+      color: var(--gray-dark);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+
+    .choose-level {
+      margin-top: 1.5rem;
+      padding: 1.25rem;
+      margin-bottom: 3rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(0,120,212,0.18);
+      background: linear-gradient(
+        180deg,
+        rgba(0,120,212,0.06),
+        rgba(0,120,212,0.02)
+      );
+    }
+
+    .choose-level-header {
+      margin-bottom: 1rem;
+  }
+
+    .level-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+  }
+
+    .level-btn {
+      background: white;
+      border: 1px solid rgba(0,120,212,0.18);
+      border-radius: 0.75rem;
+      padding: 1rem 0.75rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .level-btn span {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .level-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 18px rgba(0,120,212,0.18);
+    }
+
+    .level-section {
+      margin-top: 1.25rem;
+      margin-bottom: 3rem;
+      scroll-margin-top: 7.5rem;
+      padding: 1rem 1.25rem;
+      border-radius: 0.75rem;
+      border: 1px solid #e2e8f0;
+      background: white;
+    }
+
+    .level-title {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 768px) {
+      .level-grid {
+        grid-template-columns: 1fr;
+    }
+  }
+
+    .flow-text {
+      font-size: 0.95rem;
+      color: var(--gray);
+      line-height: 1.7;
+      margin-bottom: 0.75rem;
+  }
+
+  .flow-text:last-child {
+    margin-bottom: 0;
+  }
+
+
+
+/* BIG CONTAINER */
+    .prompt-container {
+      background: transparent;
+      border: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+}
+
+
+/* SMALL CARDS */
+   .prompt-card {
+      position: relative;
+      background: var(--bg-lighter);
+      border-radius: 0.75rem;
+      padding: 1.1rem 1.4rem;
+      border: 1px solid #e2e8f0;
+}
+
+
+/* HEADER */
+    .prompt-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+  }
+
+
+   .prompt-step {
+      display:none;
+}
+
+
+    .prompt-title {
+      flex: 1;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--gray-dark);
+  }
+
+    .copy-btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 0.6rem;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+}
+
+  .copy-btn:hover {
+      background: var(--primary-dark);
+  }
+
+
+    .prompt-content {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      color: var(--gray-dark);
+  }
+
+    /* ===== STEP INFO BOX (blue framed block) ===== */
+
+    .step-info-box {
+      margin-top: 1.5rem;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 3rem;
+    
+      background: #ffffff;
+      border: 1px solid var(--primary);
+      border-radius: 1rem;
+    
+      box-shadow: 0 6px 18px rgba(0, 120, 212, 0.08);
+    }
+
+  .step-info-item + .step-info-item {
+    margin-top: 1.25rem;
+  }
+
+  .step-info-label {
+    display: inline-block;
+    margin-bottom: 0.4rem;
+  
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  
+    color: var(--primary);
+    background: rgba(0, 120, 212, 0.08);
+  
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.4rem;
+  }
+
+  .step-info-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--gray-dark);
+  }
+
+     /* ===== STEP INFO BOX (red framed block) ===== */
+
+        .step-info-box2 {
+      margin-top: 1.5rem;
+      padding: 1.5rem 1.75rem;
+      margin-bottom: 3rem;
+    
+      background: #ffffff;
+      border: 1px solid #73262F;
+      border-radius: 0.5rem;
+    
+      box-shadow: 0 6px 18px rgba(0, 120, 212, 0.08);
+    }
+
+  .step-info-item2 + .step-info-item2 {
+    margin-top: 1.25rem;
+  }
+
+  .step-info-label2 {
+    display: inline-block;
+    margin-bottom: 0.4rem;
+  
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  
+    color: #73262F;
+    background: #FFECEE;
+  
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.4rem;
+  }
+
+  .step-info-text2 {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--gray-dark);
+  }
+
+
+/* ===== GET SOME TIPS (YELLOW BOXES) ===== */
+
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .tip-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+  
+      background: #FFF1CC;
+      border-radius: 0.6rem;
+      padding: 0.7rem 1rem;
+    
+      box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    }
+
+  .tip-emoji {
+    font-size: 1.05rem;   
+    line-height: 1;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+  .tip-card p {
+    margin: 0;
+    font-size: 0.9rem;    
+    line-height: 1.55;
+    color: var(--gray-dark);      
+  }
+
+  .tip-card strong {
+    display: block;
+    font-weight: 600;     
+    font-size: 0.92rem;   
+    margin-bottom: 0.1rem;
+    color: var(--gray-dark);
+  }
+
+    .prompt-section {
+      margin-bottom: 1.5rem;
+  }
+
+    .prompt-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1.5rem 0 0.75rem;
+  }
+
+    .prompt-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+  }
+
+    .prompt-divider span {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gray);
+  }
+
+   .prompt-instruction-box {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    
+      background: #f0d9fe;      
+      border-radius: 5px;
+      border: 1px solid #702573; 
+      padding: 0.75rem 1rem;
+    
+      color: var(--gray-dark);
+      font-size: 0.95rem;
+      line-height: 1.45;
+      margin-bottom: 1rem;
+  }
+
+    .prompt-instruction-box strong {
+      color: #702573;
+  }
+
+    /* ===== SEE AN EXAMPLE – CHAT STYLE ===== */
+
+  
+    .example-intro {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-bottom: 0.75rem;
+  }
+
+    .chat-example {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+  }
+
+/* Row */
+    .chat-row {
+      display: flex;
+      width: 100%;
+  }
+
+/* Agent left */
+    .chat-row.agent {
+      justify-content: flex-start;
+  }
+
+/* User right */
+    .chat-row.user {
+      justify-content: flex-end;
+  }
+
+/* Bubble base */
+  .chat-bubble {
+      max-width: 75%;
+      padding: 0.75rem 1rem;
+      border-radius: 0.9rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+/* Agent bubble */
+  .chat-row.agent .chat-bubble {
+      background: #f1f5f9;
+      color: var(--gray-dark);
+      border-top-left-radius: 0.25rem;
+}
+
+/* User bubble */
+  .chat-row.user .chat-bubble {
+    background: rgba(0,120,212,0.06);
+    color: var(--gray-dark);
+    border-top-right-radius: 0.25rem;
+  }
 
   
 
-<style>
-body{
-  margin:0;
-  background:#111;
-  color:white;
-  font-family:Arial;
+    .placeholder {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--gray);
+  }
+
+    .followup-toggle {
+      margin-top: 0.75rem;
+      background: none;
+      border: none;
+      color: var(--primary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0;
+  }
+
+    .followup-toggle:hover {
+      text-decoration: underline;
+  }
+
+    .show-more-btn {
+  margin-top: 0.10rem;
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: var(--primary-dark);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
 }
 
-#chat{
-  height:100vh;
-  width:100%;
+.show-more-btn:hover {
+  text-decoration: underline;
 }
-</style>
+
+    .followup-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+    
+.followup-prompts[hidden] {
+  display: none !important;
+}
+
+    .prompt-section {
+  margin-bottom: 3rem;
+}
+
+.example-section {
+  margin-bottom: 3rem;
+}
+
+h3 { 
+  color: var(--primary-dark); 
+  font-weight: 600; 
+  margin-bottom: 1.25rem; 
+  line-height: 1 ; 
+  margin-top: 0.5rem; 
+}
+
+.before-start-content {
+  color: var(--gray-dark);
+}
+
+.before-start-content ul {
+  padding-left: 2rem;
+  margin-top: 0.75rem;
+}
+
+.before-start-content li {
+  margin-bottom: 0.5rem;
+}
+
+    .example-collapsible {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+    .example-collapsible[hidden] {
+  display: none !important;
+}
+
+    .agent-flow-divider {
+  height: 1px;
+  margin: 3rem 0;
+  background: #d9d9d6;
+}
+
+    /* ===== Agent 2 – Behavior configuration ===== */
+
+.behavior-card {
+  background: #f9fafb;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  margin-top: 1.25rem;
+}
+
+.behavior-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  margin-bottom: 0.25rem;
+}
+
+.behavior-description {
+  font-size: 0.9rem;
+  color: var(--gray);
+  margin-bottom: 0.75rem;
+}
+
+.behavior-row {
+  font-size: 0.9rem;
+  color: var(--gray-dark);
+  line-height: 1.55;
+  margin-top: 0.4rem;
+}
+
+.behavior-row strong {
+  font-weight: 600;
+}
+
+.behavior-row.example {
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px dashed #e2e8f0;
+  color: var(--gray);
+}
+
+    .pre-workshop-note {
+  margin: 1.5rem 0 2.5rem;
+  padding: 1rem 1.25rem;
+  background: #FFFFFF; 
+  border-left: 4px solid #0078D4;
+  border-radius: 0.5rem;
+
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #323130;
+}
+
+.pre-workshop-note strong {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+  color: #2A446F;
+}
+
+.pre-workshop-note p {
+  margin: 0.25rem 0;
+}
+
+    .level-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+    .start-help2 {
+      margin-top: 3rem;
+      padding: 1.75rem 2rem;
+      background: #F4FAE2;
+      border: 1px solid #07641D;
+      border-radius: 0.5rem;
+    }
+
+    .start-help-title2 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #07641D;
+    }
+
+    .start-help-list2 {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .start-help-item2 {
+      display: block;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-size: 0.95rem;
+      color: inherit;
+    }
+
+       .start-help-body2 {
+      display: block;
+      padding: 0rem 0rem;
+      border-radius: 0.5rem;
+      text-decoration: none;
+      font-size: 0.95rem;
+      color: inherit;
+    }
+
+    .start-help-item2 strong {
+      font-weight: 600;
+    }
+
+    .start-help-item2 span {
+      margin-left: 0.25rem;
+      color: var(--gray);
+    }
+
+    .start-help2 a.start-help-item2:hover {
+  background-color: #E6F2C9; 
+}
+
+    /* Instruction blocks inside a big card */
+
+.instructions-wrapper {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.instruction-step {
+  background: #F9FAFB;
+  border: 1px solid #E5E7EB;
+  border-radius: 0.5rem;
+  padding: 0.9rem 1rem;
+}
+
+.instruction-step-number {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6B7280;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.instruction-step-text {
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+
+    /* =========================
+   MOBILE OPTIMIZATION
+   Balanced readability + density
+   ========================= */
+
+@media (max-width: 768px) {
+
+  /* ===== General container breathing ===== */
+  .container {
+    padding: 2rem 1rem 1.5rem;
+  }
+
+  /* ===== Big agent cards ===== */
+  .agent-card {
+    padding: 1.6rem 1.2rem;
+    border-radius: 0.9rem;
+  }
+
+  /* ===== Subsections (core fix) ===== */
+  .agent-subsection {
+    padding: 1.4rem 1.1rem 1.4rem 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 1.5rem;
+    border-radius: 0.7rem;
+  }
+
+  .agent-subsection::before {
+    top: 1rem;
+    bottom: 1rem;
+  }
+
+  /* ===== Section titles ===== */
+  .agent-title {
+    font-size: 1.35rem;
+    line-height: 1.3;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+    line-height: 1.35;
+  }
+
+  h3 {
+    font-size: 1rem;
+  }
+
+  /* ===== Step info boxes ===== */
+  .step-info-box,
+  .step-info-box2 {
+    padding: 1.1rem 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .step-info-text,
+  .step-info-text2 {
+    font-size: 0.92rem;
+  }
+
+  /* ===== Choose level box ===== */
+  .choose-level {
+    padding: 1rem 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  .choose-level-header h3 {
+    font-size: 1rem;
+  }
+
+  /* ===== Level sections ===== */
+  .level-section {
+    padding: 1rem 0.9rem;
+    margin-bottom: 2rem;
+  }
+
+  /* ===== Tips cards ===== */
+  .tip-card {
+    padding: 0.65rem 0.8rem;
+  }
+
+  .tip-card p {
+    font-size: 0.88rem;
+  }
+
+  /* ===== Prompt cards ===== */
+  .prompt-card {
+    padding: 0.85rem 0.9rem;
+  }
+
+  .prompt-content {
+    font-size: 0.88rem;
+  }
+
+  /* ===== Chat examples ===== */
+  .chat-bubble {
+    max-width: 88%;
+    font-size: 0.88rem;
+    padding: 0.65rem 0.8rem;
+  }
+
+  .chat-example {
+    gap: 0.6rem;
+  }
+
+  /* ===== Behavior cards ===== */
+  .behavior-card {
+    padding: 0.9rem 0.9rem;
+    margin-top: 0.9rem;
+  }
+
+  .behavior-title {
+    font-size: 0.95rem;
+  }
+
+  .behavior-row {
+    font-size: 0.88rem;
+  }
+
+  /* ===== Instruction steps ===== */
+  .instruction-step {
+    padding: 0.7rem 0.8rem;
+  }
+
+  .instruction-step-text {
+    font-size: 0.88rem;
+  }
+
+  /* ===== Move to copilot green box ===== */
+  .start-help2 {
+    padding: 1.2rem 1rem;
+  }
+
+  .start-help-body2,
+  .start-help-item2 {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* ===== Navigation buttons ===== */
+  .nav-btn,
+  .entry-btn,
+  .level-btn {
+    padding: 1rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+}
+
+    /* =========================
+   MOBILE — reduce card-in-card heaviness
+   ========================= */
+
+@media (max-width: 768px) {
+
+  /* Level sections inside big cards */
+  .level-section {
+    background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: none;
+    border-radius: 0.6rem;
+  }
+
+  /* Choose level box */
+  .choose-level {
+    border: 1px solid rgba(0,120,212,0.14);
+    box-shadow: none;
+  }
+
+  /* Prompt cards (copy prompt blocks) */
+  .prompt-card {
+    background: #fafafa;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: none;
+  }
+
+  /* Behavior cards (Agent 2) */
+  .behavior-card {
+    background: #fcfcfc;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: none;
+  }
+
+  /* Instruction steps */
+  .instruction-step {
+    background: #fafafa;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: none;
+  }
+
+  /* Tips cards */
+  .tip-card {
+    background: #fff6da;
+    box-shadow: none;
+  }
+
+  /* Chat bubbles slightly softer */
+  .chat-row.agent .chat-bubble {
+    background: #f5f7fa;
+  }
+
+  .chat-row.user .chat-bubble {
+    background: rgba(0,120,212,0.08);
+  }
+
+}
+
+    /* ===== Copilot style prompt block ===== */
+
+.prompt-clean {
+  border: 1px solid #d1d1d1;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  margin-top: 0.75rem;
+  background: white;
+}
+
+.prompt-clean-header {
+  background: #f3f2f1;
+  border-bottom: 1px solid #d1d1d1;
+  padding: 0.45rem 0.65rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.prompt-clean-header span {
+  font-size: 0.75rem;
+  color: #605e5c;
+  font-weight: 600;
+}
+
+.prompt-clean-copy {
+  background: white;
+  border: 1px solid #c8c6c4;
+  border-radius: 0.4rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.prompt-clean-copy:hover {
+  background: #f3f2f1;
+}
+
+.prompt-clean-body {
+  padding: 1rem 1.1rem;
+  font-family: "Consolas","Courier New",monospace;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: #201f1e;
+  white-space: pre-wrap;
+}
+
+    .real-checklist {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  cursor: pointer;
+}
+
+.check-item input {
+  margin-top: 0.18rem;
+  cursor: pointer;
+  transform: scale(1.05);
+}
+
+.check-item span {
+  flex: 1;
+}
+
+    
+  </style>
 </head>
 
 <body>
+  <header class="header">
+    <h1>AI for Nonprofit Leaders</h1>
+    <p class="subtitle">Choose Your Own Adventure — Microsoft Elevate Days</p>
+    <p class="meta">90 minutes • London</p>
+  </header>
 
-<h2 style="padding:20px;">My Companion</h2>
+  <div class="container">
+    <div class="intro">
+      <h2>Welcome to Agent-to-Agent-to-Impact</h2>
+      <h3>A human-centered copilot build sprint</h3>
 
-<div id="chat"></div>
+      <p>
+        In this <strong>90-minute</strong> hands-on session, you’ll work with Copilot
+        as a co-maker to explore a real problem and shape an AI agent
+        that can support meaningful work.
+      </p>
 
+      <p>
+        This companion will guide you through three parts of the journey:
+        <strong>understanding</strong> the problem,
+        <strong>defining</strong> the system,
+        and <strong>setting</strong> the guardrails that keep it safe,
+        responsible, and usable.
+      </p>
+
+      <p>
+        By the end of the session, you’ll leave with a
+        <strong>working agent concept</strong>, a clear agent charter,
+        and a roadmap to iterate and scale.
+      </p>
+      
+      <!-- light divider -->
+  <div class="intro-divider"></div>
+
+  <!-- prerequisites inset -->
+  <div class="prerequisites-box">
+    <p class="start-label">Prerequisites</p>
+
+    <ul>
+      <li>A Microsoft 365 Copilot license</li>
+      <li>Access to Copilot Chat (Teams or Web)</li>
+      <li>About 90 minutes of focused time</li>
+      <li>A real problem or challenge you’re willing to explore</li>
+    </ul>
+  </div>
+  </div>
+    
+    <section class="why-agents">
+      <h2 class="why-title">What You’ll Achieve</h2>
+
+      <div class="why-grid">
+        <div class="why-card">
+          <span class="why-emoji">🎯</span>
+          <h4>Frame the right problems</h4>
+          <p>Learn how to focus on what truly matters before jumping to solutions.</p>
+        </div>
+
+        <div class="why-card">
+          <span class="why-emoji">🧠</span>
+          <h4>Turn scattered information into insight</h4>
+          <p>Make sense of messy inputs, signals, and data to inform better decisions.</p>
+        </div>
+
+        <div class="why-card">
+          <span class="why-emoji">🤝</span>
+          <h4>Design agents that support people</h4>
+          <p>Build AI that augments human judgment and real work.</p>
+        </div>
+
+        <div class="why-card">
+          <span class="why-emoji">⚡</span>
+          <h4>Accelerate innovation</h4>
+          <p>Free up time and cognitive load so teams can focus on higher-value work.</p>
+        </div>
+      </div>
+    </section>
+    
+    
+      <h2 class="why-title">Before The Workshop Begins</h2>
+    <div class="pre-workshop-note">
+  <p>
+    If you’ve arrived here early, you’re in the right place.
+  </p>
+  <p>
+    Everything below is what we’ll work through together during the workshop.
+    You’re welcome to skim and get a sense of what’s coming —
+    we’ll guide you step by step once we begin.
+  </p>
+</div>
+    
+    
+    <div class="agent-flow-divider"></div>
+
+    <div class="journey-start">
+      <h3 class="journey-title">Step 1 · Your learning journey starts here</h3>
+      <p class="journey-subtitle">Choose the path that best matches what you already have.</p>
+
+      <nav class="nav-section">
+        <p class="start-label">CHOOSE WHERE TO START</p>
+
+        <div class="nav-grid">
+          <button class="nav-btn primary" onclick="document.getElementById('agent-1').scrollIntoView({ behavior: 'smooth' })">
+            <span>🔍</span>
+            DIS <br>
+            Research Agent
+          </button>
+
+          <button class="nav-btn primary" onclick="document.getElementById('agent-2').scrollIntoView({ behavior: 'smooth' })">
+            <span>🧠</span>
+            DIS <br>
+            Agent Foundry
+          </button>
+
+          <button class="nav-btn primary" onclick="document.getElementById('agent-3').scrollIntoView({ behavior: 'smooth' })">
+            <span>🛡️</span>
+            DIS <br>
+            Trust & Safety Agent Agent
+          </button>
+        </div>
+      </nav>
+    </div>
+
+   <!-- ============ AGENT 1 ============ -->
+<section id="agent-1" class="agent-section">
+  <div class="agent-card">
+    <div class="agent-eyebrow">Agent 1</div>
+    <div class="agent-title">Digital Impact Studio Research Agent</div>
+    <div class="agent-subtitle">
+      Use this section to clarify the problem, gather inputs, and define what the agent should do before you build.
+    </div>
+
+    <div class="challenge-box">
+      <div class="challenge-label">Objective</div>
+      <div class="challenge-text">
+        Clarify the core problem, identify who is most affected, and define the job-to-be-done that will anchor the future agent’s design.
+      </div>
+    </div>
+
+    <p class="entry-label">1. Open the agent</p>
+    <a
+     href="https://copilotstudio.preview.microsoft.com/environments/ca5225c7-5933-e6d1-8103-4d9e8028ba17/bots/copilots_header_00040/canvas?__version__=2&enableFileAttachment=true"
+      class="open-agent-link open-agent-btn">
+      Open agent <span aria-hidden="true">→</span>
+    </a>
+
+    <div class="entry-nav">
+      <p class="entry-label">2. Choose one way to start</p>
+
+      <div class="entry-grid">
+        <button class="entry-btn" onclick="document.getElementById('agent1-problem').scrollIntoView({ behavior: 'smooth' })">
+          <span>🎯</span>
+          Start from a problem
+        </button>
+
+        <button class="entry-btn" onclick="document.getElementById('agent1-persona').scrollIntoView({ behavior: 'smooth' })">
+          <span>👤</span>
+          Start from a persona
+        </button>
+ </div>
+
+      <p class="help-choose">
+        Not sure where to start?
+        <a href="#agent1-help">Help me choose →</a>
+      </p>
+    </div>
+
+    <!-- ===== Start from a problem ===== -->
+    <section id="agent1-problem" class="agent-subsection">
+      <h2>Start from a problem</h2>
+  
+
+      <div class="step-info-box">
+        <div class="step-info-item">
+          <span class="step-info-label">What this step is about</span>
+          <p class="step-info-text">
+            This step helps you slow down and <strong>make sense</strong> of a challenge
+            that feels messy, unclear, or unresolved before jumping to solutions.
+          </p>
+        </div>
+
+         <div class="step-info-item">
+          <span class="step-info-label">How to respond</span>
+          <p class="step-info-text">
+            Start from something concrete. Describe a <strong>real</strong> moment where
+            this feels frustrating, risky, slow, or confusing.
+          </p>
+        </div>
+        
+      </div>
+
+      <div class="choose-level">
+        <div class="choose-level-header">
+          <h3>How would you like to approach this?</h3>
+          <p class="flow-text">Use the guidance below to understand what to do, see examples, or move faster.</p>
+        </div>
+
+        <div class="level-grid">
+          <button class="level-btn" onclick="document.getElementById('agent1-problem-hint').scrollIntoView({ behavior: 'smooth' })">
+            <span>💡</span>
+            Get a few tips
+          </button>
+
+          <button class="level-btn" onclick="document.getElementById('agent1-problem-template').scrollIntoView({ behavior: 'smooth' })">
+            <span>📋</span>
+            Copy a prompt
+          </button>
+
+          <button class="level-btn" onclick="document.getElementById('agent1-problem-example').scrollIntoView({ behavior: 'smooth' })">
+            <span>🧩</span>
+            See an example
+          </button>
+        </div>
+        
+      </div>
+
+
+     <!-- ===== Get some tips ===== -->
+<div id="agent1-problem-hint" class="level-section">
+  <h3>Get some tips</h3>
+  <p class="flow-text">
+    Use these tips to move faster and get better results from the agent.
+  </p>
+
+  <div class="tips-list">
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Start from a real friction</strong>
+        Describe something that feels slow, confusing, or frustrating today—without jumping to how to fix it.
+      </p>
+    </div>
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Ground the problem in a real moment</strong>
+        Share a concrete situation someone experienced: what they tried to do, where it broke down, and why it mattered.
+      </p>
+    </div>
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Describe what is, not what should be.</strong>
+        Stay descriptive, not prescriptive. The agent will help you move toward solutions later.
+      </p>
+    </div>
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Keep it short and imperfect</strong>
+        One or two sentences are enough to get started.
+        You can refine or redirect once the agent reflects the problem back to you.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+      <!-- ===== Copy a prompt ===== -->
+      <section id="agent1-problem-template" class="level-section prompt-section">
+        <h3>Copy a prompt</h3>
+         <p class="flow-text">
+          Use these prompts to quickly explore the problem before going deeper.
+        </p>
+
+        <div class="prompt-container">
+          <div class="prompt-divider"><span> Starting prompts</span></div>
+          <div class="prompt-instruction-box"><strong> Instruction:</strong> Choose one of these prompts to begin. 
+            Start wherever it feels easiest, you can refine or shift the problem as the conversation unfolds.</div>
+
+          <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">Frame the problem</h3>
+              <button class="copy-btn" data-copy="prompt-1">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-1">
+              I’m working with <span class="placeholder">[organization]</span> on <span class="placeholder">[area]</span> and trying to understand <span class="placeholder">[problem]</span>.
+            </div>
+          </div>
+
+              <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">Share a concrete problem moment</h3>
+              <button class="copy-btn" data-copy="prompt-2">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-2">
+              A concrete moment where this problem shows up is when <span class="placeholder">[someone]</span> tries to <span class="placeholder">[do something]</span>, 
+              but <span class="placeholder">[what goes wrong or breaks down]</span>.
+            </div>
+          </div>
+          
+           <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">Describe the problem as it exists today</h3>
+              <button class="copy-btn" data-copy="prompt-3">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-3">
+              Today, the situation looks like this:<span class="placeholder">[describe what is happening now]</span>. 
+              This creates issues because<span class="placeholder">[what makes this hard, slow, confusing, or risky]</span>.
+            </div>
+          </div>
+
+          <div class="prompt-divider"><span> Follow-up prompts</span></div>
+          <div class="prompt-instruction-box"><strong> Instruction:</strong> As the agent asks follow-up questions, 
+            respond naturally. If you feel stuck, you can use the prompt below.</div>
+
+          <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">When the agent asks how things actually work </h3>
+              <button class="copy-btn" data-copy="prompt-4">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-4">
+              One important nuance is that <span class="placeholder">[how it actually works]</span>, affecting <span class="placeholder">[who / why]</span>.
+            </div>
+          </div>
+
+           <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">When the agent needs a concrete example</h3>
+              <button class="copy-btn" data-copy="prompt-5">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-5">
+              Here’s a concrete moment that shows the problem: <span class="placeholder">[what someone tried to do, what went wrong, and why it mattered in that moment].</span>
+            </div>
+          </div>
+
+   <!-- Collapsible follow-up prompts -->
+       <div class="followup-prompts" hidden>
+         
+            <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">When something feels slightly off</h3>
+              <button class="copy-btn" data-copy="prompt-6">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-6">
+              This is mostly right, but one thing is missing or slightly off: <span class="placeholder">[short clarification].</span>
+            </div>
+          </div>
+
+           <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">When the problem scope is too broad</h3>
+              <button class="copy-btn" data-copy="prompt-7">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-7">
+              This problem is too broad. Let’s focus specifically on <span class="placeholder">[one part of the situation, moment, or context].</span>.
+            </div>
+          </div>
+          
+            <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">When the wrong person is in focus</h3>
+              <button class="copy-btn" data-copy="prompt-8">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-8">
+              I’d prefer to focus on a different person: <span class="placeholder">[who they are and why].</span>
+            </div>
+          </div>
+
+            <div class="prompt-card">
+            <div class="prompt-header">
+              <h3 class="prompt-title">When I want to shift focus</h3>
+              <button class="copy-btn" data-copy="prompt-9">📋 Copy</button>
+            </div>
+            <div class="prompt-content" id="prompt-9">
+              I’d like to shift focus. Instead of <span class="placeholder">[current framing]</span>, 
+              I want to explore <span class="placeholder">[new person, angle, or perspective]</span>.
+            </div>
+          </div>
+
+         </div>
+
+          <button
+  class="show-more-btn"
+  aria-expanded="false"
+  onclick="toggleFollowups(this)">
+  Show more follow-up prompts
+</button>
+
+          
+        </div>
+      </section>
+
+  <!-- ===== See an example ===== -->
+<div id="agent1-problem-example" class="level-section example-section">
+  <h3>See an example</h3>
+
+  <p class="flow-text example-intro">
+    Here’s a short example of how a conversation with the agent might begin.
+    Your conversation will adapt to what you share.
+  </p>
+
+  <div class="chat-example">
+
+    
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        We’re working with a large nonprofit network and trying to improve how people find food and how information is managed across the system.
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        Got it — that sounds like a broad problem space.  
+        Let’s slow it down a bit.
+        <br><br>
+        Can you describe one concrete moment where this feels most frustrating or risky?
+      </div>
+    </div>
+
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        A neighbor tries to find a nearby food pantry online, but the information is outdated or wrong. They show up, and it’s closed or they’re not eligible.
+      </div>
+    </div>
+
+    <div class="example-collapsible" id="problem-example-1" hidden>
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        That’s a very clear example — thank you.  
+        It shows both the human impact and the data reliability issue.
+        <br><br>
+        In that moment, who is most affected: the neighbor looking for food, or the staff responsible for keeping the information updated?
+      </div>
+    </div>
+
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        The neighbor.
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        Got it — let’s focus on them.
+        <br><br>
+        People who need food often rely on online information to find pantries, but that information can be outdated or incomplete.
+        <br><br>
+        Does this feel right, or is something missing?
+      </div>
+    </div>
+
+ </div>
+
+<button
+  class="show-more-btn"
+  aria-expanded="false"
+  data-target="problem-example-1"
+  onclick="toggleExample(this)">
+  Show full example
+</button>
+    
+  </div>
+</div>
+
+   <!-- Move to Copilot (inline closure, Agent 1 pattern) -->
+      <div class="start-help2">
+        <div class="start-help-title2">Are you done with research?</div>
+
+        <p class="start-help-body2">
+        If you’ve reached a clear and validated framing, you’re ready to move on. This is the foundation the next agent will build on. From here, you can:
+        </p>
+
+<br>
+    <!-- Move to Agent 2 -->
+<a
+  href="#agent-2"
+  class="start-help-item2">
+  → Move to <strong>Agent 2</strong> to translate this framing into concrete agent behavior
+</a>
+
+<!-- Alternative (non cliccabile) -->
+<p class="start-help-item2">
+  → Or stay here and refine the problem, persona, or use case if something still feels off
+</p>
+
+      </div>
+
+      
+ </section>
+
+   <!-- ===== Start from a persona ===== -->
+<section id="agent1-persona" class="agent-subsection">
+  <h2>Start from a persona</h2>
+
+  <div class="step-info-box">
+    <div class="step-info-item">
+      <span class="step-info-label">What this step is about</span>
+      <p class="step-info-text">
+        This step helps you focus on a specific <strong>person or group</strong> and understand
+        what makes their work or experience <strong>difficult today</strong>.
+      </p>
+    </div>
+
+    <div class="step-info-item">
+      <span class="step-info-label">How to respond</span>
+      <p class="step-info-text">
+        Describe <strong>who</strong> this person is, <strong>what</strong> they are responsible for,
+        and <strong>where</strong> things tend to break down or feel risky for them.
+      </p>
+    </div>
+    
+  </div>
+
+  <div class="choose-level">
+    <div class="choose-level-header">
+      <h3>How would you like to approach this?</h3>
+      <p class="flow-text">Use the guidance below to understand what to do, see examples, or move faster.</p>
+    </div>
+
+    <div class="level-grid">
+      <button class="level-btn"
+        onclick="document.getElementById('agent1-persona-hint').scrollIntoView({ behavior: 'smooth' })">
+        <span>💡</span>
+        Get a few tips
+      </button>
+
+      <button class="level-btn"
+        onclick="document.getElementById('agent1-persona-template').scrollIntoView({ behavior: 'smooth' })">
+        <span>📋</span>
+        Copy a prompt
+      </button>
+
+      <button class="level-btn"
+        onclick="document.getElementById('agent1-persona-example').scrollIntoView({ behavior: 'smooth' })">
+        <span>🧩</span>
+        See an example
+      </button>
+    </div>
+  </div>
+
+
+      <!-- ===== Get some tips (persona) ===== -->
+<div id="agent1-persona-hint" class="level-section">
+  <h3>Get some tips</h3>
+  <p class="flow-text">
+    Use these tips to clarify who you’re designing for and what makes their situation challenging.
+  </p>
+
+  <div class="tips-list">
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Be specific about the person</strong>
+        Focus on a real role or group, not a generic audience. Specificity helps the agent ask better questions.
+      </p>
+    </div>
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Anchor them in context</strong>
+        Describe where and when they do this work, and what pressures or constraints they face.
+      </p>
+    </div>
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Look for friction, not demographics</strong>
+        What feels slow, risky, confusing, or frustrating for them today?
+      </p>
+    </div>
+
+    <div class="tip-card">
+      <span class="tip-emoji">💡</span>
+      <p>
+        <strong>Stay descriptive</strong>
+        Avoid jumping to solutions or features. The goal is to understand the problem from their perspective.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+  <!-- ===== Copy a prompt (persona) ===== -->
+<section id="agent1-persona-template" class="level-section prompt-section">
+  <h3>Copy a prompt</h3>
+  <p class="flow-text">
+    Use these prompts to help the agent understand who you’re designing for and what’s challenging for them.
+  </p>
+
+  <div class="prompt-container">
+    <div class="prompt-divider"><span> Starting prompts</span></div>
+
+    <div class="prompt-instruction-box">
+      <strong>Instruction:</strong>
+      Choose one of these prompts to get started. Pick the one that best helps you describe the person and their context.
+    </div>
+
+    <!-- Prompt 1 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">Describe who this is for</h3>
+        <button class="copy-btn" data-copy="persona-prompt-1">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-1">
+        I’m working with <span class="placeholder">[a specific role or group of people]</span> who operate in <span class="placeholder">[context or environment]</span>.
+        Lately, it’s been hard for them to <span class="placeholder">[what feels most difficult, slow, or frustrating]</span>,
+        and I want to better understand what makes this challenging for them day to day.
+      </div>
+    </div>
+
+    <!-- Collapsible follow-up prompts -->
+       <div class="followup-prompts" hidden>
+    <!-- Prompt 2 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">Describe what they are responsible for</h3>
+        <button class="copy-btn" data-copy="persona-prompt-2">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-2">
+        <span class="placeholder">[This person or group]</span> are responsible for <span class="placeholder">[key responsibility or task]</span>, 
+          often under <span class="placeholder">[constraints like time, resources, policy, or risk]</span>.
+        I’d like to explore where they feel the most pressure or uncertainty in their work today.
+      </div>
+    </div>
+
+    <!-- Prompt 3 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">Describe what feels hardest for them today</h3>
+        <button class="copy-btn" data-copy="persona-prompt-3">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-3">
+        I’m focusing on <span class="placeholder">[a specific role or type of person]</span>.
+        There’s a particular moment in their work that feels especially demanding or stressful for them: <span class="placeholder">[briefly describe the situation]</span>.
+        I want to understand why that moment is hard for them, and what’s at stake from their perspective.
+      </div>
+    </div>
+</div>
+    
+     <button
+  class="show-more-btn"
+  aria-expanded="false"
+  onclick="toggleFollowups(this)">
+  Show more prompts
+</button>
+    
+    <div class="prompt-divider"><span> Follow-up prompts</span></div>
+
+    <div class="prompt-instruction-box">
+      <strong>Instruction:</strong>
+      As the agent asks follow-up questions, respond naturally. If you get stuck, you can use one of the prompts below.
+    </div>
+
+    <!-- Prompt 4 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">When the agent asks about their responsibilities or context</h3>
+        <button class="copy-btn" data-copy="persona-prompt-4">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-4">
+       One important part of their role is that they are responsible for 
+        <span class="placeholder">[key task or responsibility]</span>, 
+        usually in <span class="placeholder">[context or moment]</span>, 
+        which affects how they work day to day.
+      </div>
+    </div>
+
+    <!-- Prompt 5 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">When the agent asks what feels hardest or most frustrating</h3>
+        <button class="copy-btn" data-copy="persona-prompt-5">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-5">
+        What feels hardest for them is <span class="placeholder">[specific friction or pressure]</span>, especially because <span class="placeholder">[why this is difficult in their context]</span>.
+      </div>
+    </div>
+
+    <!-- Collapsible follow-up prompts -->
+       <div class="followup-prompts" hidden>
+         
+      <!-- Prompt 6 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">When the agent asks about pressure, risk, or trade-offs</h3>
+        <button class="copy-btn" data-copy="persona-prompt-6">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-6">
+        They often feel pressure because <span class="placeholder">[what they’re trying to balance or protect]</span>, 
+        and there’s little guidance or support around <span class="placeholder">[what makes this risky or stressful]</span>.
+      </div>
+    </div>
+
+      <!-- Prompt 7 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">When the agent needs a concrete example from their work</h3>
+        <button class="copy-btn" data-copy="persona-prompt-7">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-7">
+        A concrete moment that shows this is when <span class="placeholder">[describe a real situation from their day]</span>, 
+        which makes things difficult because <span class="placeholder">[impact on them]</span>.
+      </div>
+    </div>
+
+      <!-- Prompt 8 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">When something feels slightly off about the framing</h3>
+        <button class="copy-btn" data-copy="persona-prompt-8">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-8">
+        This is mostly right, but one thing that’s missing is <span class="placeholder">[clarification about the person, their role, or their context]</span>.
+      </div>
+    </div>
+
+       <!-- Prompt 9 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">When the focus is on the wrong person</h3>
+        <button class="copy-btn" data-copy="persona-prompt-9">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-9">
+        I’d like to focus on a different person or role: <span class="placeholder">[who they are]</span>, because they’re more central to this situation.
+      </div>
+    </div>
+
+        <!-- Prompt 10 -->
+    <div class="prompt-card">
+      <div class="prompt-header">
+        <h3 class="prompt-title">When the description is too broad</h3>
+        <button class="copy-btn" data-copy="persona-prompt-10">📋 Copy</button>
+      </div>
+      <div class="prompt-content" id="persona-prompt-10">
+        This feels a bit broad. Let’s focus specifically on <span class="placeholder">[part of their work, moment, or responsibility]</span>.
+      </div>
+    </div>
+
+
+ </div>
+
+      <button
+  class="show-more-btn"
+  aria-expanded="false"
+  onclick="toggleFollowups(this)">
+  Show more follow-up prompts
+</button>
+         
+  </div>
+</section>
+
+
+  <!-- ===== See an example (persona) ===== -->
+<div id="agent1-persona-example" class="level-section example-section">
+  <h3>See an example</h3>
+
+  <p class="flow-text example-intro">
+    Here’s a short example of how a conversation with the agent might begin.
+    Your conversation will adapt to what you share — this is just one possible path.
+  </p>
+
+  <div class="chat-example">
+
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        High school teachers in under-resourced districts are overwhelmed by administrative tasks that take time away from lesson planning.
+        I want to understand what feels hardest for them today.
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        That’s a great starting point — you’ve clearly named a group of people and an area of tension.
+        <br><br>
+        Let’s focus on them for a moment.
+        When these teachers are doing their work, what are they primarily responsible for — and when do these administrative tasks tend to pile up?
+      </div>
+    </div>
+
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        Mostly during the school day. They’re responsible for teaching, but also for managing lesson timing and scheduling tasks throughout the day.
+      </div>
+    </div>
+
+  <div class="example-collapsible" id="persona-example-1" hidden>
+      
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        Got it — so they’re juggling teaching and scheduling decisions at the same time, which can be a heavy cognitive load.
+        <br><br>
+        What feels most difficult or frustrating about this for them?
+      </div>
+    </div>
+
+
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        There aren’t clear tools or systems, and there’s a lot of pressure to fit everything in.
+        There’s no real prioritization of tasks.
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        Thanks — that helps clarify things.
+        <br><br>
+        Based on what you’ve shared, here’s a draft problem framing:
+        <br><br>
+        High school teachers in under-resourced districts lose valuable instructional time because they must manage lesson scheduling and administrative tasks during the school day without clear tools or prioritization, creating constant pressure and stress.
+        <br><br>
+        Does this feel accurate so far, or is something missing?
+      </div>
+    </div>
+
+ </div>
+
+ <button
+  class="show-more-btn"
+  aria-expanded="false"
+  data-target="persona-example-1"
+  onclick="toggleExample(this)">
+  Show full example
+</button>
+    
+  </div>
+</div>
+
+
+
+     <!-- Move to Copilot (inline closure, Agent 1 pattern) -->
+      <div class="start-help2">
+        <div class="start-help-title2">Are you done with research?</div>
+
+        <p class="start-help-body2">
+        If you’ve reached a clear and validated framing, you’re ready to move on. This is the foundation the next agent will build on. From here, you can:
+        </p>
+
+<br>
+    <!-- Move to Agent 2 -->
+<a
+  href="#agent-2"
+  class="start-help-item2">
+  → Move to <strong>Agent 2</strong> to translate this framing into concrete agent behavior
+</a>
+
+<!-- Alternative (non cliccabile) -->
+<p class="start-help-item2">
+  → Or stay here and refine the problem, persona, or use case if something still feels off
+</p>
+
+      </div>
+  
+</section>
+
+
+    <!-- ===== Help me choose ===== -->
+    <div id="agent1-help" class="start-help">
+      <div class="start-help-title">Not sure where to start?</div>
+
+      <div class="start-help-list">
+        <a href="#agent1-problem" class="start-help-item">
+          <strong>Start from a problem</strong>
+          <span>→ when you have a challenge or symptoms, but no shared definition of what success looks like</span>
+        </a>
+
+        <a href="#agent1-persona" class="start-help-item">
+          <strong>Start from a persona</strong>
+          <span>→ when you know who the agent is for, but not what they actually need help with</span>
+        </a>
+
+
+      <p class="start-help-footer">
+        <strong>Still unsure?</strong> Start from a problem — if something feels hard or slow today, that’s usually a good place to begin.
+      </p>
+    </div>
+
+  </div>
+
+  
+</section>
+
+
+<!-- ============ AGENT 2 ============ -->
+<section id="agent-2" class="agent-section">
+  <div class="agent-card">
+
+    <div class="agent-eyebrow">Agent 2</div>
+    <div class="agent-title">Digital Impact Studio Agent Foundry</div>
+    <div class="agent-subtitle">
+      Turn your validated framing into a complete, copy-paste-ready system prompt for Copilot Studio.
+    </div>
+
+    <!-- Objective -->
+    <div class="challenge-box">
+      <div class="challenge-label">Objective</div>
+      <div class="challenge-text">
+        Translate the output of the Digital Impact Studio Research Agent into a fully configured Copilot agent
+        with clear scope, behavior, and rules — ready to paste into Copilot Studio.
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <p class="entry-label">1. Open the agent</p>
+    <a
+      href="https://copilotstudio.preview.microsoft.com/environments/ca5225c7-5933-e6d1-8103-4d9e8028ba17/bots/copilots_header_6e5ce/canvas?__version__=2&enableFileAttachment=true"
+      class="open-agent-link open-agent-btn">
+      Open agent <span aria-hidden="true">→</span>
+    </a>
+
+    <br><br>
+
+    <!-- Step 2 -->
+    <p class="entry-label">2. Paste your validated framing</p>
+    <p class="flow-text"> <em>
+      Copy the final structured output from the Digital Impact Studio Research Agent and paste it into Copilot.
+      This framing will be used as the foundation for all decisions in this step.</em>
+    </p>
+
+    <!-- ================= DESIGN YOUR AGENT ================= -->
+    <section class="agent-subsection">
+
+      <h2>Design your agent</h2>
+
+      <!-- Step info (same pattern as Agent 1) -->
+      <div class="step-info-box">
+        <div class="step-info-item">
+          <span class="step-info-label">What will happen in this step</span>
+          <p class="step-info-text">
+            The agent will guide you through a series of focused questions 
+            to translate your validated framing into clear <strong>agent behavior.</strong> 
+            You’ll move one decision at a time, with confirmation before moving forward.
+          </p>
+        </div>
+
+        <div class="step-info-item">
+          <span class="step-info-label">How the agent makes decisions</span>
+          <p class="step-info-text">
+            The agent proposes defaults based on your inputs, explains why each decision matters, 
+            and asks you to confirm or adjust before continuing. 
+            You’re not expected to have perfect answers: the goal is <strong>alignment</strong>, not precision.
+          </p>
+        </div>
+      </div>
+
+      <!-- How would you like to approach this?) -->
+      <div class="choose-level">
+        <div class="choose-level-header">
+          <h3>How would you like to approach this?</h3>
+          <p class="flow-text">
+            Explore guidance for this step in the way that’s most useful to you.
+          </p>
+        </div>
+
+        <div class="level-grid">
+          <button
+            class="level-btn"
+            onclick="document.getElementById('tips-agent-2').scrollIntoView({ behavior: 'smooth' })">
+            <span>💡</span>
+            Get some tips
+          </button>
+
+          <button
+            class="level-btn"
+            onclick="document.getElementById('agent2-behavior-config').scrollIntoView({ behavior: 'smooth' })">
+            <span>⚙️</span>
+            What your choices will change
+          </button>
+
+    
+          <button
+            class="level-btn"
+            onclick="document.getElementById('agent2-builder-example').scrollIntoView({ behavior: 'smooth' })">
+            <span>🧩</span>
+            See an example
+          </button>
+        </div>
+      </div>
+
+      <!-- Tips -->
+      <section id="tips-agent-2" class="level-section">
+        <h3>Get some tips</h3>
+        <p class="flow-text">
+          Use these tips to move confidently through the Digital Impact Studio Agent Foundry and make deliberate configuration choices.
+        </p>
+
+        <div class="tips-list">
+          <div class="tip-card">
+            <span class="tip-emoji">💡</span>
+            <p>
+              <strong>Every confirmation locks behavior in place</strong>
+              When the agent asks you to confirm something, it becomes a rule the agent will follow every time.
+            </p>
+          </div>
+
+          <div class="tip-card">
+            <span class="tip-emoji">💡</span>
+            <p>
+              <strong>Describe how the agent should act</strong>
+              Focus on observable behavior: what the agent asks, checks, includes, or excludes.
+            </p>
+          </div>
+
+          <div class="tip-card">
+            <span class="tip-emoji">💡</span>
+            <p>
+              <strong>Call out uncertainty early</strong>
+              Ambiguity signals stricter validation and clearer rules.
+            </p>
+          </div>
+
+          <div class="tip-card">
+            <span class="tip-emoji">💡</span>
+            <p>
+              <strong>Define defaults, not edge cases</strong>
+              Get the standard path right first — you can refine later.
+            </p>
+          </div>
+        </div>
+      </section>
+
+    <!-- Behavior configuration -->
+<section id="agent2-behavior-config" class="level-section">
+  <h3>What your choices will change</h3>
+  <p class="flow-text">
+    Each choice you make will shape how your agent behaves with real users. Use this space to understand what each decision will change.
+  </p>
+
+  <!-- CARD 1 -->
+  <div class="behavior-card">
+    <h4 class="behavior-title">Interaction Structure</h4>
+    <p class="behavior-description">
+      Defines how predictable or adaptive the conversation with users will feel.
+    </p>
+
+    <div class="behavior-row">
+      <strong>What the agent is asking you:</strong> how strictly it should follow a predefined interaction flow when guiding users.
+    </div>
+
+    <div class="behavior-row">
+      <strong>What this decision shapes:</strong> how consistent, controlled, or adaptive the interaction will be across different users.
+    </div>
+
+    <div class="behavior-row">
+      <strong>What changes depending on what you choose:</strong> a more structured setup creates repeatable and predictable interactions, while a more flexible one allows the agent to adapt to user responses and context.
+    </div>
+
+    <div class="behavior-row example">
+      <strong>How to decide:</strong> choose more structure when consistency, reliability, or compliance matter most, and more flexibility when users benefit from a more natural, adaptive interaction.
+    </div>
+  </div>
+
+  <!-- CARD 2 -->
+  <div class="behavior-card">
+    <h4 class="behavior-title">Handling incomplete or uncertain information</h4>
+    <p class="behavior-description">
+      Defines how cautious or permissive the agent should be when data is incomplete.
+    </p>
+
+    <div class="behavior-row">
+      <strong>What the agent is asking you:</strong> how it should behave when information is missing, uncertain, or only partially matches the request.
+    </div>
+
+    <div class="behavior-row">
+      <strong>What this decision shapes:</strong> how much the agent prioritizes strict accuracy versus broader but less certain results.
+    </div>
+
+    <div class="behavior-row">
+      <strong>What changes depending on what you choose:</strong> a stricter approach excludes uncertain results to protect reliability, while a more flexible one includes partial matches but clearly signals missing or unclear information.
+    </div>
+
+    <div class="behavior-row example">
+      <strong>How to decide:</strong> choose stricter handling when trust and accuracy are critical, and more flexibility when it’s better to show possible options rather than risk hiding useful information.
+    </div>
+  </div>
+
+  <!-- CARD 3 -->
+  <div class="behavior-card">
+    <h4 class="behavior-title">Output structure</h4>
+    <p class="behavior-description">
+      Defines how users will receive and interpret the agent’s responses.
+    </p>
+
+    <div class="behavior-row">
+      <strong>What the agent is asking you:</strong> how structured and detailed its responses should be when presenting results or recommendations.
+    </div>
+
+    <div class="behavior-row">
+      <strong>What this decision shapes:</strong> how quickly users can scan, understand, and act on the information provided.
+    </div>
+
+    <div class="behavior-row">
+      <strong>What changes depending on what you choose:</strong> a compact structure supports fast scanning and quicker decisions, while a more detailed structure provides richer context but requires more attention.
+    </div>
+
+    <div class="behavior-row example">
+      <strong>How to decide:</strong> choose compact outputs when speed and clarity matter most, and more detailed outputs when context, comparison, or explanation are important.
+    </div>
+  </div>
+</section>
+
+      <!-- ===== See an example ===== -->
+<div id="agent2-builder-example" class="level-section example-section">
+  <h3>See an example</h3>
+
+  <p class="flow-text example-intro">
+    This example shows how the Digital Impact Studio Agent Foundry leads the conversation
+    and proposes decisions — you don’t need to know the answers upfront.
+  </p>
+
+  <div class="chat-example">
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        Welcome — I’ll help you turn what you already have into a
+        complete system prompt for Copilot Studio.
+        <br><br>
+        To start, paste the output you’re working from.
+      </div>
+    </div>
+
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        <em>[Paste your validated framing here]</em>
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        Thanks — that’s enough for me to get started.
+        <br><br>
+        Based on what you shared, I’ll propose a few options at each step.
+        You can pick one, tweak it, or suggest an alternative.
+      </div>
+    </div>
+
+    <!-- Agent -->
+    <div class="chat-row agent">
+      <div class="chat-bubble">
+        First, let’s define the overall agent type.
+        <br><br>
+        Based on your framing, here are a few options that could fit:
+        <br><br>
+        1) An agent that retrieves information precisely  
+        2) An agent that helps compare and narrow down options  
+        3) An agent that guides users through a conversation
+        <br><br>
+        You can choose one, or tell me if you’re aiming for something slightly different.
+      </div>
+    </div>
+
+    <!-- User -->
+    <div class="chat-row user">
+      <div class="chat-bubble">
+        Let’s go with the first option.
+      </div>
+    </div>
+
+    <!-- Collapsible content -->
+    <div class="example-collapsible" id="builder-example-1" hidden>
+
+      <!-- Agent -->
+      <div class="chat-row agent">
+        <div class="chat-bubble">
+          Great — I’ll proceed with that direction.
+          <br><br>
+          Next, I’ll guide you through a few behavior decisions.
+          I’ll suggest defaults, and you can confirm or adjust them.
+        </div>
+      </div>
+
+      <!-- Agent -->
+      <div class="chat-row agent">
+        <div class="chat-bubble">
+          For example, one decision is how strictly the agent should
+          follow a fixed interaction flow.
+          <br><br>
+          Here are a few common approaches — which one feels closest?
+        </div>
+      </div>
+
+      <!-- User -->
+      <div class="chat-row user">
+        <div class="chat-bubble">
+          I’m fine with the stricter option.
+        </div>
+      </div>
+
+      <!-- Agent -->
+      <div class="chat-row agent">
+        <div class="chat-bubble">
+          Got it — I’ll lock that in.
+          <br><br>
+          We’ll continue like this until all key behaviors are defined.
+          At the end, I’ll generate a single block of instructions
+          you can paste directly into Copilot Studio.
+        </div>
+      </div>
+
+    </div>
+
+    <button
+      class="show-more-btn"
+      aria-expanded="false"
+      data-target="builder-example-1"
+      onclick="toggleExample(this)">
+      Show full example
+    </button>
+
+  </div>
+</div>
+
+    <!-- Move to Copilot (inline closure, Agent 1 pattern) -->
+      <div class="start-help2">
+        <div class="start-help-title2">Are you done designing?</div>
+
+        <p class="start-help-body2">
+        If you’ve defined how your agent should behave and respond, you’re ready to move on. This configuration is what Copilot will use to run your agent in practice. From here, you can:
+        </p>
+
+<br>
+    <!-- Move to Agent 2 -->
+<a
+  href="#move-copilot"
+  class="start-help-item2">
+ → Move to <strong>Copilot</strong> to create and test your agent using the output you just generated
+</a>
+
+<!-- Alternative (non cliccabile) -->
+<p class="start-help-item2">
+  → Or stay here and refine behaviors, rules, or examples if something doesn’t feel right yet
+</p>
+
+      </div>
+
+    </section>
+
+
+
+<!-- ================= MOVE TO COPILOT ================= -->
+<section id="move-copilot" class="agent-subsection">
+
+  <h2>Move to Copilot</h2>
+
+  <!-- Step info -->
+  <div class="step-info-box">
+    <div class="step-info-item">
+      <span class="step-info-label">What will happen in this step</span>
+      <p class="step-info-text">
+    You’ll take the output from the Agent Builder and use it to create a real agent in Copilot. 
+        This step is about <strong>applying</strong> what you already defined, not making new design decisions.
+      </p>
+    </div>
+
+    <div class="step-info-item">
+      <span class="step-info-label">How to use this section</span>
+      <p class="step-info-text">
+         Use the buttons below to choose what you need right now:
+        <br> <br>
+         <strong>Next step: based on testing</strong> → Choose this if you already have the Agent Builder output and want to put it into Copilot, test it, and validate behavior.<br><br>
+         <strong>I’m new to Copilot</strong> → Choose this if you’re not familiar with Copilot or Agent Builder and want a quick orientation before creating your agent.
+      </p>
+    </div>
+  </div>
+
+  <!-- Choose where to go -->
+  <div class="choose-level">
+    <div class="choose-level-header">
+      <h3>Choose where to go next</h3>
+      <p class="flow-text">
+        Get the support you need to move from instructions to a working agent.
+      </p>
+    </div>
+
+   <div class="level-grid level-grid-2">
+      <button
+        class="level-btn"
+        onclick="document.getElementById('agent2-copilot-steps').scrollIntoView({ behavior: 'smooth' })">
+        <span>🚀</span>
+        Next step: paste and test
+      </button>
+
+      <button
+        class="level-btn"
+        onclick="document.getElementById('agent2-copilot-orientation').scrollIntoView({ behavior: 'smooth' })">
+        <span>🗺️</span>
+        I'm new to Copilot: Show me around
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== Path 1 ===== -->
+<section id="agent2-copilot-steps" class="level-section">
+
+  <h3>Paste and test your agent</h3>
+
+  <p class="flow-text">
+    Use the output from the Agent Builder to create and test your agent inside Copilot.
+    No new decisions are needed — you’re applying what you already defined.
+  </p>
+
+  <div class="instructions-wrapper">
+
+    <!-- Step 1 -->
+    <div class="instruction-step">
+      <div class="instruction-step-number">Step 1</div>
+      <div class="instruction-step-text">
+        Open <strong>Microsoft Teams</strong>.
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="instruction-step">
+      <div class="instruction-step-number">Step 2</div>
+      <div class="instruction-step-text">
+        Click <strong>Copilot</strong> from the right-hand sidebar.
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="instruction-step">
+      <div class="instruction-step-number">Step 3</div>
+      <div class="instruction-step-text">
+        Inside Copilot, select <strong>Create an agent</strong>
+        to open <strong>Agent Builder</strong>.
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+      <div class="instruction-step">
+    <div class="instruction-step-number">Step 4</div>
+    <div class="instruction-step-text">
+      You’ll see a text field where Agent Builder expects input.
+      This is where your agent instructions will go.
+    </div>
+  </div>
+
+    <!-- Step 5 -->
+   <div class="instruction-step">
+      <div class="instruction-step-number">Step 2</div>
+      <div class="instruction-step-text">
+        Paste the <strong>first code block of instructions</strong> into the <strong>Describe</strong> field,
+        exactly as generated.
+      </div>
+    </div>
+
+    <!-- Step 6 -->
+   <div class="instruction-step">
+      <div class="instruction-step-number">Step 3</div>
+      <div class="instruction-step-text">
+        Paste the <strong>second block of instructions</strong> right after the first one.
+      </div>
+    </div>
+
+
+    <!-- Step 7 -->
+    <div class="instruction-step">
+      <div class="instruction-step-number">Step 4</div>
+      <div class="instruction-step-text">
+        Save the agent and test it with a few realistic prompts to confirm the behavior.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+  <!-- ===== Path 2 ===== -->
+ <section id="agent2-copilot-orientation" class="level-section">
+
+  <h3>I'm New to Copilot</h3>
+
+  <p class="flow-text">
+   [[TODO: add simple visual map of Copilot Agent Builder UI for first-time users]
+  </p>
+
+
+</section>
+
+
+      <!-- Move to Copilot (inline closure, Agent 1 pattern) -->
+      <div class="start-help2">
+        <div class="start-help-title2">Are you done designing?</div>
+
+        <p class="start-help-body2">
+       If you’ve defined how your agent should behave, respond, and make decisions, you’re ready to move on. This configuration now describes how your agent will operate in practice. From here, you can:
+        </p>
+
+<br>
+    <!-- Move to Agent 2 -->
+<a
+  href="#agent-3"
+  class="start-help-item2">
+ → Move to <strong>Agent 3</strong> to define guardrails, responsibilities, and success signals
+</a>
+
+<!-- Alternative (non cliccabile) -->
+<p class="start-help-item2">
+  → Or stay here and refine behaviors, rules, or examples if something doesn’t feel right yet
+</p>
+
+
+</section>
+
+
+    
+    <!-- ============ /DESIGN YOUR AGENT ============ -->
+
+  </div>
+</section>
+
+
+  <!-- ============ AGENT 3 ============ -->
+    <section id="agent-3" class="agent-section">
+      <div class="agent-card">
+        <div class="agent-eyebrow">Agent 3</div>
+        <div class="agent-title">Digital Impact Studio Trust & Safety Agent</div>
+        <div class="agent-subtitle">
+          Use this section to ensure the agent is safe, responsible, and ready to scale across teams.
+        </div>
+
+        <div class="challenge-box">
+          <div class="challenge-label">Objective</div>
+          <div class="challenge-text">
+            Define guardrails, ownership, and success criteria to support responsible deployment and iteration.
+          </div>
+        </div>
+
+  <!-- STEP 1 -->
+ <p class="entry-label">1. Generate your agent definition summary</p>
+
+<p class="flow-text">
+<em>Stay inside Copilot Agent Builder.  
+In the <strong>Describe</strong> field of your current agent, paste the prompt below and run it.</em>
+</p>
+
+<div class="prompt-clean">
+
+  <div class="prompt-clean-header">
+    <span>Prompt</span>
+    <button class="prompt-clean-copy" onclick="copyAgent3Prompt()">Copy</button>
+  </div>
+
+  <div class="prompt-clean-body" id="agent3PromptText">
+Generate a concise Agent Definition Summary for this agent.
+
+This summary will be used to create a Safety, Privacy & Guardrails Charter.
+
+Include only:
+
+Agent purpose
+Primary users
+Core responsibilities
+Explicit non-goals
+Key behaviors
+Constraints or sensitivities
+
+Keep the summary compact, structured, and easy to copy.
+  </div>
+
+</div>
+<br>
+
+
+    <!-- STEP 2 -->
+    <p class="entry-label">2. Open the Digital Impact Studio Trust & Safety Agent</p>
+    <a href="https://copilotstudio.preview.microsoft.com/environments/ca5225c7-5933-e6d1-8103-4d9e8028ba17/bots/copilots_header_4ddba/canvas?__version__=2&enableFileAttachment=true" class="open-agent-link open-agent-btn">
+      Open the agent <span aria-hidden="true">→</span>
+    </a>
+    
+    <br> <br>
+
+    <!-- STEP 3 -->
+    <p class="entry-label">3. Paste the generated summary</p>
+    <p class="flow-text"> <em>
+      Copy the summary Copilot generated and paste it into the Digital Impact Studio Trust & Safety Agent. It will use this to generate your final Agent Charter.</em>
+    </p>
+
+<!-- ================= AGENT 3 — CONSOLIDATE & CHARTER ================= -->
+<section class="agent-subsection" id="agent3-wrapup">
+
+  <h2>Finalize your Agent Charter</h2>
+
+  <!-- Mini intro (Step info pattern) -->
+  <div class="step-info-box">
+    <div class="step-info-item">
+      <span class="step-info-label">What this step is about</span>
+      <p class="step-info-text">
+        This step helps you consolidate what you’ve built and make sure your agent is clear, responsible, and ready to be used in real contexts.
+      </p>
+    </div>
+
+    <div class="step-info-item">
+      <span class="step-info-label">What this produces</span>
+      <p class="step-info-text">
+        A short <strong>Agent Charter</strong> you can use to document scope, guardrails, ownership, and success signals.
+      </p>
+    </div>
+  </div>
+
+<!-- Checklist -->
+<div class="level-section" id="agent3-checklist">
+  <h3>Quick readiness checklist</h3>
+  <p class="flow-text">
+    Use this quick check to confirm your agent is ready to exist beyond this workshop.
+  </p>
+
+  <div class="real-checklist">
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>I can clearly explain what this agent does and does not do</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>The primary users and context are well defined</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>The agent’s behavior and boundaries feel intentional</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>Risks or sensitive areas have been considered</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>There is a clear owner or team responsible for this agent</span>
+    </label>
+
+    <label class="check-item">
+      <input type="checkbox">
+      <span>I know how this agent should be tested or used next</span>
+    </label>
+
+  </div>
+</div>
+
+
+<!-- Where useful -->
+<div class="level-section" id="agent3-why-useful">
+  <h3>Where this becomes useful</h3>
+  <p class="flow-text">
+    Your Agent Charter becomes a lightweight reference you can use across contexts.
+  </p>
+
+  <div class="instructions-wrapper">
+
+    <div class="instruction-step">
+      <div class="instruction-step-text">
+        <strong>You can use this to clarify the agent for others</strong><br>
+        Share a clear description of what the agent does, who it’s for, and where it should be used.
+      </div>
+    </div>
+
+    <div class="instruction-step">
+      <div class="instruction-step-text">
+        <strong>You can use this to document scope and guardrails</strong><br>
+        Keep a simple record of what the agent should and should not do as it evolves.
+      </div>
+    </div>
+
+    <div class="instruction-step">
+      <div class="instruction-step-text">
+        <strong>You can use this to support responsible testing or rollout</strong><br>
+        Use the charter as a reference when sharing the agent with teammates or piloting it in real workflows.
+      </div>
+    </div>
+
+    <div class="instruction-step">
+      <div class="instruction-step-text">
+        <strong>You can use this to revisit decisions later</strong><br>
+        Return to the charter when refining behavior, expanding scope, or scaling the agent.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+  <!-- Final box (same pattern as Agent 1/2) -->
+  <div class="start-help2" id="agent3-done">
+    <div class="start-help-title2">Are you done completing everything?</div>
+
+    <p class="start-help-body2">
+      If your charter feels clear and aligned, you’re ready to move forward.
+    </p>
+
+    <br>
+
+    <p class="start-help-item2">
+      → Start testing the agent in real scenarios
+    </p>
+
+    <p class="start-help-item2">
+      → Share it with your team or stakeholders
+    </p>
+
+    <p class="start-help-item2">
+      → Or return to any previous step if something still feels unclear
+    </p>
+  </div>
+
+</section>
+
+  </div>
+</section>
+
+
+    <!-- ============ CHEATSHEET ============ -->
+    <section class="cheatsheet">
+      <h2 class="cheatsheet-title">Agent Design Cheatsheet</h2>
+      <p class="cheatsheet-subtitle">
+        Key terms used throughout the workshop, with practical guidance.
+      </p>
+
+      <div class="cheatsheet-table-wrapper">
+        <table class="cheatsheet-table">
+          <thead>
+            <tr>
+              <th>Terms</th>
+              <th>Definition</th>
+              <th>Tips</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Prompt / Instructions</strong></td>
+              <td>The “brain” of the agent: clear goals, scope, guardrails, tone.</td>
+              <td>Write like a policy. Be explicit about what to do and what not to do.</td>
+            </tr>
+
+            <tr>
+              <td><strong>System Prompt (Agent Instructions)</strong></td>
+              <td>Persistent rules that shape all responses and actions.</td>
+              <td>Include persona, JTBD, success criteria, and compliance notes.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Grounding / Knowledge</strong></td>
+              <td>The sources an agent can use (files, sites, data).</td>
+              <td>Curate “just enough” high-quality content; keep it current.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Actions / Connectors</strong></td>
+              <td>The capabilities the agent can execute (tasks, records, APIs).</td>
+              <td>Start read-only; add write actions once guardrails are tested.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Temperature</strong></td>
+              <td>Controls creativity vs. determinism.</td>
+              <td>Lower if the agent rambles or invents details.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Max Tokens / Response Length</strong></td>
+              <td>Caps how long a response can be.</td>
+              <td>Short for chat UX; longer for drafts or summaries.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Guardrails & Safety Filters</strong></td>
+              <td>Policy boundaries and role-based constraints.</td>
+              <td>Encode must/never rules and test with edge cases.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Evaluation / Test Scenarios</strong></td>
+              <td>Repeatable prompts with expected outcomes.</td>
+              <td>Build 10–20 real prompts and iterate.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Observability (Logs / Telemetry)</strong></td>
+              <td>How you review what the agent did and why.</td>
+              <td>Track failures, refusals, hallucinations, latency.</td>
+            </tr>
+
+            <tr>
+              <td><strong>Publishing & Governance</strong></td>
+              <td>Who can see/use the agent; versioning and control.</td>
+              <td>Maintain an Agent Register (owner, data, risk).</td>
+            </tr>
+
+            <tr>
+              <td><strong>Agent Builder vs. Copilot Studio</strong></td>
+              <td>Fast prototyping vs. deeper customization.</td>
+              <td>Prototype in Agent Builder → harden in Copilot Studio.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+
+  <script>
+function copyAgent3Prompt() {
+  const text = document.getElementById("agent3PromptText").innerText.trim();
+  navigator.clipboard.writeText(text);
+
+  const btn = document.querySelector(".prompt-clean-copy");
+  const original = btn.innerText;
+  btn.innerText = "Copied";
+  setTimeout(()=> btn.innerText = original, 1200);
+}
+</script>
+
+
+  
 <script>
-const connectionString = "https://ca5225c75933e6d181034d9e8028ba.17.environment.api.powerplatform.com/copilotstudio/dataverse-backed/authenticated/bots/copilots_header_00040/conversations?api-version=2022-03-01-preview";
+function toggleExample(button) {
+  const id = button.dataset.target;
+  const example = document.getElementById(id);
+  if (!example) return;
 
-async function startChat(){
-  const client = await Microsoft.Agents.WebChat.createClient(connectionString);
+  const isHidden = example.hasAttribute("hidden");
 
-  Microsoft.Agents.WebChat.renderWebChat(
-    { client: client },
-    document.getElementById("chat")
-  );
+  example.toggleAttribute("hidden", !isHidden);
+  button.textContent = isHidden ? "Hide example" : "Show full example";
+  button.setAttribute("aria-expanded", String(isHidden));
 }
 
-startChat();
+</script>
+
+
+
+<script>
+ function toggleFollowups(button) {
+  const followups = button.previousElementSibling;
+
+  if (!followups || !followups.classList.contains("followup-prompts")) return;
+
+  const isHidden = followups.hasAttribute("hidden");
+
+  if (isHidden) {
+    followups.removeAttribute("hidden");
+    button.textContent = "Show fewer follow-up prompts";
+    button.setAttribute("aria-expanded", "true");
+  } else {
+    followups.setAttribute("hidden", "");
+    button.textContent = "Show more follow-up prompts";
+    button.setAttribute("aria-expanded", "false");
+  }
+}
+</script>
+
+
+  
+  <script>
+  document.querySelectorAll(".copy-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      const targetId = button.getAttribute("data-copy");
+      const text = document.getElementById(targetId).innerText.trim();
+
+      navigator.clipboard.writeText(text).then(() => {
+        const original = button.innerText;
+        button.innerText = "✓ Copied";
+        setTimeout(() => (button.innerText = original), 1200);
+      });
+    });
+  });
 </script>
 
 </body>
