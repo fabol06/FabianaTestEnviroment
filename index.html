@@ -419,62 +419,66 @@
       text-decoration: underline;
     }
 
-    .why-agents {
-      margin-bottom: 3.5rem;
-    }
+    /* card layout */
+.why-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--light-gray);
+  padding: 22px 24px;
+  min-height: 140px;
 
-    .why-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: var(--primary-dark);
-      margin-bottom: 1.5rem;
-    }
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
 
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem 2rem;
-    }
+  transition: all .15s ease;
+}
 
-    .why-card {
-      background: #ffffff;
-      border-radius: 0.75rem;
-      border: 1px solid var(--light-gray);
-      padding: 1.25rem 1.5rem;
-      min-height: 170px;
-      justify-content: flex-start;
-      position: relative;
-    }
+.why-card:hover {
+  border-color: #d0d0d0;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
 
-    .why-card::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 1.25rem;
-      bottom: 1.25rem;
-      width: 4px;
-      background: var(--primary);
-      border-radius: 2px;
-    }
+/* remove old blue side bar */
+.why-card::before {
+  display:none;
+}
 
-    .why-emoji {
-      display: block;
-      font-size: 1.6rem;
-      margin-bottom: 0.75rem;
-    }
+/* icon square */
+.why-icon {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  border-radius: 10px;
+  background: #f3f2f1;
 
-    .why-card h4 {
-      font-size: 1rem;
-      font-weight: 700;
-       margin-bottom: 0.5rem;
-    }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .why-card p {
-      font-size: 0.95rem;
-      margin-top: 0;
-      color: var(--gray);
-      line-height: 1.5;
-    }
+.why-icon img{
+  width:20px;
+  height:20px;
+  opacity:.9;
+}
+
+/* text block */
+.why-content h4{
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin:0 0 6px 0;
+  color:#242424;
+}
+
+.why-content p{
+  font-size: 0.95rem;
+  margin:0;
+  color:#616161;
+  line-height:1.5;
+}
+
 
     .journey-start {
       margin: 3rem 0 3.5rem;
@@ -1639,25 +1643,33 @@ h3 {
 
       <div class="why-grid">
         <div class="why-card">
-          <span class="why-emoji">🎯</span>
+         <div class="why-icon">
+  <img src="images/Target.svg" alt="">
+</div>
           <h4>Frame the right problems</h4>
           <p>Learn how to focus on what truly matters before jumping to solutions.</p>
         </div>
 
         <div class="why-card">
-          <span class="why-emoji">🧠</span>
+          <div class="why-icon">
+  <img src="images/BrainCircuit.svg" alt="">
+</div>
           <h4>Turn scattered information into insight</h4>
           <p>Make sense of messy inputs, signals, and data to inform better decisions.</p>
         </div>
 
         <div class="why-card">
-          <span class="why-emoji">🤝</span>
+         <div class="why-icon">
+  <img src="images/Handshake.svg" alt="">
+</div>
           <h4>Design agents that support people</h4>
           <p>Build AI that augments human judgment and real work.</p>
         </div>
 
         <div class="why-card">
-          <span class="why-emoji">⚡</span>
+    <div class="why-icon">
+  <img src="images/Flash.svg" alt="">
+</div>
           <h4>Accelerate innovation</h4>
           <p>Free up time and cognitive load so teams can focus on higher-value work.</p>
         </div>
