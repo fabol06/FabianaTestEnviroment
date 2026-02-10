@@ -1525,38 +1525,40 @@ h3 {
 }
 
 .topbar {
-  width: 100%;
   background: #ffffff;
   border-bottom: 1px solid rgba(0,0,0,0.2);
+  padding: 12px 0;
 }
 
 .topbar-inner {
-  max-width: 1200px; /* stesso container del sito */
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 14px 24px;
-
+  padding: 0 28px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
 }
 
+/* LOGO */
 .topbar-logo {
-  height: 18px;      /* regola qui se serve */
+  height: 28px;   /* cambia qui se lo vuoi più grande */
   width: auto;
 }
 
+/* DIVIDER */
 .topbar-divider {
   width: 1px;
-  height: 18px;
+  height: 22px;
   background: rgba(0,0,0,0.25);
-  display: inline-block;
 }
 
+/* TEXT */
 .topbar-title {
-  font-size: 14px;
+  font-size: 16px;
   color: #1a1a1a;
   font-weight: 500;
 }
+
 
     
   </style>
@@ -1567,15 +1569,15 @@ h3 {
 <header class="topbar">
   <div class="topbar-inner">
 
-    <!-- Logo -->
-    <img src="images/LogoElevate1.png" alt="Microsoft Elevate" class="topbar-logo">
+    <!-- Logo  -->
+    <img src="images/pincopallino.png" alt="Microsoft Elevate" class="topbar-logo">
 
     <!-- Divider -->
     <span class="topbar-divider"></span>
 
-    <!-- Text -->
+    <!-- Event name -->
     <span class="topbar-title">
-     <strong>| Elevate Days</strong>
+      Elevate Days
     </span>
 
   </div>
