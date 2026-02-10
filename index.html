@@ -1524,11 +1524,64 @@ h3 {
   flex: 1;
 }
 
+.topbar {
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+.topbar-inner {
+  max-width: 1200px; /* stesso container del sito */
+  margin: 0 auto;
+  padding: 14px 24px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar-logo {
+  height: 18px;      /* regola qui se serve */
+  width: auto;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 18px;
+  background: rgba(0,0,0,0.25);
+  display: inline-block;
+}
+
+.topbar-title {
+  font-size: 14px;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
     
   </style>
 </head>
 
 <body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+
+    <!-- Logo -->
+    <img src="images/LogoElevate.png" alt="Microsoft Elevate" class="topbar-logo">
+
+    <!-- Divider -->
+    <span class="topbar-divider"></span>
+
+    <!-- Text -->
+    <span class="topbar-title">
+      Microsoft Elevate <strong>| Elevate Days</strong>
+    </span>
+
+  </div>
+</header>
+
+  
   <header class="header">
     <h1>AI for Nonprofit Leaders</h1>
     <p class="subtitle">Choose Your Own Adventure — Microsoft Elevate Days</p>
