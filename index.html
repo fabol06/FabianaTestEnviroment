@@ -144,40 +144,64 @@
       font-weight: 600;
     }
 
-    .nav-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
-    }
+.nav-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-top:10px;
+}
 
-    .nav-btn {
-      background: var(--bg-light);
-      border: 2px solid transparent;
-      border-radius: 0.75rem;
-      padding: 1.25rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    }
+/* main cards */
+.nav-btn{
+  background:#176fb8;
+  border:none;
+  border-radius:18px;
+  padding:38px 24px 34px;
 
-    .nav-btn span {
-      display: block;
-      font-size: 1.5rem;
-      margin-bottom: 0.5rem;
-    }
+  color:white;
+  cursor:pointer;
+  text-align:center;
 
-    .nav-btn.primary {
-      background: var(--primary);
-      color: white;
-    }
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
 
-    .nav-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 6px 16px rgba(0,120,212,0.35);
-    }
+  transition:.18s ease;
+  box-shadow:0 6px 18px rgba(0,0,0,0.12);
+}
+
+/* hover */
+.nav-btn:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 30px rgba(0,0,0,0.18);
+  background:#1565ab;
+}
+
+/* icon */
+.nav-icon{
+  width:34px;
+  height:34px;
+  margin-bottom:14px;
+  opacity:.95;
+}
+
+/* small DIS label */
+.nav-eyebrow{
+  font-size:.75rem;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  opacity:.85;
+  margin-bottom:6px;
+  font-weight:600;
+}
+
+/* main title */
+.nav-title{
+  font-size:1.25rem;
+  font-weight:700;
+  line-height:1.25;
+}
 
     @media (max-width: 768px) {
       .nav-grid {
@@ -1764,24 +1788,40 @@ h3 {
         <p class="start-label">CHOOSE WHERE TO START</p>
 
         <div class="nav-grid">
-          <button class="nav-btn primary" onclick="document.getElementById('agent-1').scrollIntoView({ behavior: 'smooth' })">
-            <span>🔍</span>
-            DIS <br>
-            Research Agent
-          </button>
 
-          <button class="nav-btn primary" onclick="document.getElementById('agent-2').scrollIntoView({ behavior: 'smooth' })">
-            <span>🧠</span>
-            DIS <br>
-            Agent Foundry
-          </button>
+  <button class="nav-btn primary"
+    onclick="document.getElementById('agent-1').scrollIntoView({ behavior: 'smooth' })">
 
-          <button class="nav-btn primary" onclick="document.getElementById('agent-3').scrollIntoView({ behavior: 'smooth' })">
-            <span>🛡️</span>
-            DIS <br>
-            Trust & Safety Agent Agent
-          </button>
-        </div>
+    <img src="images/Search.svg" class="nav-icon">
+
+    <div class="nav-eyebrow">DIS</div>
+    <div class="nav-title">Research Agent</div>
+
+  </button>
+
+
+  <button class="nav-btn primary"
+    onclick="document.getElementById('agent-2').scrollIntoView({ behavior: 'smooth' })">
+
+    <img src="images/Brain.svg" class="nav-icon">
+
+    <div class="nav-eyebrow">DIS</div>
+    <div class="nav-title">Agent Foundry</div>
+
+  </button>
+
+
+  <button class="nav-btn primary"
+    onclick="document.getElementById('agent-3').scrollIntoView({ behavior: 'smooth' })">
+
+    <img src="images/Shield.svg" class="nav-icon">
+
+    <div class="nav-eyebrow">DIS</div>
+    <div class="nav-title">Trust & Safety Agent</div>
+
+  </button>
+
+</div>
       </nav>
     </div>
 
